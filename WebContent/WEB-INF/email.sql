@@ -1,0 +1,43 @@
+DROP TABLE IF EXISTS "EmailQueue" CASCADE;
+DROP TABLE IF EXISTS "EmailQueue_attachment" CASCADE;
+DROP TABLE IF EXISTS "EmailQueue_status" CASCADE;
+
+CREATE TABLE "EmailQueue" (
+	email_id SERIAL NOT NULL,
+	recepient VARCHAR(255) NOT NULL,
+	sender VARCHAR(255) NOT NULL,
+	subject VARCHAR(255) NOT NULL,
+	message_body TEXT,
+	attachment_id INTEGER,
+	created_date TIMESTAMP NOT NULL,
+	created_by_id INTEGER DEFAULT -1 NOT NULL,
+	status_id INTEGER NOT NULL,
+	send_date TIMESTAMP NOT NULL,
+
+	PRIMARY KEY (email_id)
+);
+
+CREATE TABLE "EmailQueue_attachment" (
+	id SERIAL NOT NULL,
+	attachment VARCHAR NOT NULL,
+	PRIMARY KEY (id)
+);
+
+CREATE TABLE "EmailQueue_status"(
+	id SERIAL NOT NULL,
+	message_status VARCHAR(20) NOT NULL,
+	PRIMARY KEY (id),
+	UNIQUE (message_status)
+);
+
+CREATE TABLE "EmailQueue_info"(
+id SERIAL NOT NULL,
+info VARCHAR(255) NOT NULL,
+PRIMARY KEY (id)
+);
+
+ALTER TABLE "EmailQueue" ADD FOREIGN KEY (attachment_id) REFERENCES "EmailQueue_attachment"(id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE SET NULL;
+ALTER TABLE "EmailQueue" ADD FOREIGN KEY (created_by_id) REFERENCES "User"(id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE SET DEFAULT;
+ALTER TABLE "EmailQueue" ADD FOREIGN KEY (status_id) REFERENCES "EmailQueue_status"(id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE RESTRICT;
+ALTER TABLE "EmailQueue" ADD FOREIGN KEY (status_id) REFERENCES "EmailQueue_info"(id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE RESTRICT;
+
