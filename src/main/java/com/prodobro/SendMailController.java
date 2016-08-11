@@ -21,7 +21,7 @@ public class SendMailController {
 
         String recipient = request.getParameter("recipient");
         String subject = request.getParameter("subject");
-        String message = request.getParameter("message_body");
+        String message = request.getParameter("message");
 
         SimpleMailMessage email = new SimpleMailMessage();
         email.setTo(recipient);
